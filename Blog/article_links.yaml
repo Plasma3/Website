@@ -1,0 +1,8 @@
+# Article Links in YAML format
+article_links:
+  - title: "Welcome to My Blog"
+    url: "https://example.com/welcome"
+  - title: "Getting Started with Alpine.js"
+    url: "https://example.com/alpinejs"
+  - title: "Modern CSS Tricks"
+    url: "https://example.com/css-tricks"
