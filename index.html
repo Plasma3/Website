@@ -1,52 +1,28 @@
-<!--
-	Simple Blog Page with Alpine.js and Bootstrap
-	Modern dark mode aesthetic (Discord-inspired, glossy)
--->
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark" x-data style="height: 100%;">
 
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Freah.se</title>
+		<title>Fredrik Ahlberg</title>
 		
 		<!-- Bootstrap CSS -->
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 		
 		<!-- Alpine.js -->
-		<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+		<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+		<style>[x-cloak] { display: none !important; }</style>
 		
 		<!-- Custom styles -->
 		<style>
-			body {
-				min-height: 100vh;
+			.background-image {
 				background-image: url(./chris-greenhow-3FjIywswHSk-unsplash.avif); 
 				background-size: cover; 
 				background-position: center;
 			}
 
-			main {
-				flex: 1 0 auto;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				min-height: 60vh;
-				color:#b9bbbe;
-			}
-
-			.header, .footer {
-				background: #23272A;
-			}
-
-			.article-list {
-				background: rgba(44, 47, 51, 0.85);
-				border-radius: 1rem;
-				box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-				padding: 2rem 2.5rem;
-				max-width: 600px;
-				width: 100%;
-				backdrop-filter: blur(6px);
-			}
+			header, footer { background: #23272A; }
+			.backdrop-blur { backdrop-filter: blur(6px); }
 
 			/* .article-item {
 				background: rgba(32, 34, 37, 0.8);
@@ -77,44 +53,57 @@
 		</style>
 	</head>
 
-	<body class="d-flex flex-column">
-		<div class="visually-hidden">
-			Photo by <a href="https://unsplash.com/@chrisgreenhow?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Chris Greenhow</a> on <a href="https://unsplash.com/photos/brown-and-white-deer-surrounded-by-green-plants-3FjIywswHSk?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
-		</div>
+	<body class="d-flex flex-column text-center" style="min-height: 100dvh;">
+		
+		<!-- Image attribution -->
+		<div class="visually-hidden">Photo by <a href="https://unsplash.com/@chrisgreenhow?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Chris Greenhow</a> on <a href="https://unsplash.com/photos/brown-and-white-deer-surrounded-by-green-plants-3FjIywswHSk?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a></div>
 
-		<header class="header text-start">
+		<header class="text-start">
 			<h1 class="fs-3 p-3 ps-5" style="color:whitesmoke;">
 				<a href="./" class="text-decoration-none text-reset">My name's Fredrik Ahlberg</a>
 			</h1>
 		</header>
+		
+		<div class="background-image d-flex flex-column flex-grow-1" x-data="xData">
 
-		<main x-data="xData" x-init="init()">
-			<div class="article-list">
-				<h2 class="fs-1 fw-bold text-center">Hi there!</h2>
-				<h3 class="fs-5 fw-light text-center">Here's a list of things I've made</h3>
+			<main class="d-flex flex-column flex-grow-1 align-items-center justify-content-center px-3">
 
-				<template x-for="article in articles" :key="article.title">
-					<a class="article-item mb-3 d-block text-decoration-none" :href="article.url" target="_blank">
-						<div class="article-title" x-text="article.title"></div>
-					</a>
-				</template>
-			</div>
-		</main>
+				<div class="article-list container p-4 rounded-4 shadow backdrop-blur" style="background: #2c2f33d9;">
+					<h2 class="fs-1 fw-bold">Hi there!</h2>
+					<h3 class="fs-5 fw-light mb-4">Here's a list of things I've made</h3>
+					
+					<template x-for="article in articles" :key="article.title">
+						<a class="article-item mb-3 d-block text-decoration-none" :href="article.url">
+							<div class="article-title" x-text="article.title"></div>
+						</a>
+					</template>
+				</div>
 
-		<footer class="footer text-center py-1 rounded-top-2 w-25 mx-auto mt-3">
-			<span>&copy; 2025 Fredrik Ahlberg</span>
-		</footer>
+			</main>
+			
+			<footer class="py-1 px-2 rounded-top-2 mx-auto mt-3" style="min-width: fit-content;"><span>&copy; 2025 Fredrik Ahlberg</span></footer>
+		</div>
 
-		<!-- Bootstrap JS (optional, for interactivity) -->
-		<!-- Shouldn't be needed since alpine is handling everything -->
-		<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> -->
 		<script>
 			const xData = {
 				articles: [],
 				async init() {
-					const response = await fetch('article_links.json');
+					const response = await fetch('articles.json');
+					this.articles = [ { title: 'No articles found', url: '#' } ];
+					
+					if (!response.ok) {
+						console.error('Failed to fetch article links:', response.statusText);
+						return;
+					}
+
+					// this.articles = (await fetch('article_links.json')).json();
 					const data = await response.json();
-					this.articles = data.article_links;
+					this.articles = data.articles || this.articles;
+
+					// console.log(await fetch('article_links.json'));
+					if (this.articles.length === 0) {
+						console.log('No articles exists');
+					}
 				}
 			};
 		</script>
