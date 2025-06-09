@@ -38,7 +38,8 @@
 		<button class="btn btn-dark position-absolute top-0 end-0 m-3 p-1" @click="pythonCode = getPythonCode(codeIncludeDelay = !codeIncludeDelay);">Toggle Delay</button>
 
 		<h1 class="text-white">Python Pyodide Test</h1>
-		<pre class="bg-secondary p-3 rounded"><code class="language-python text-start" x-text="pythonCode" x-init="$watch('pythonCode', () => { delete $el.dataset.highlighted; hljs.highlightElement($el); })"></code></pre>
+
+		<pre class="bg-secondary p-3 rounded"><code class="language-python text-start" x-text="pythonCode" x-init="$watch('pythonCode', () => { $el.removeAttribute('data-highlighted'); hljs.highlightElement($el); })"></code></pre>
 
 		<p class="text-white mb-2" x-text="pyodideStatusText"></p>
 		
