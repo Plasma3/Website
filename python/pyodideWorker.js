@@ -2,6 +2,7 @@
 class PyodideWorker {
 	constructor() {
 		this.pyodide = null;
+		this.isReady = false;
 	}
 
 	async initialize() {
@@ -10,8 +11,9 @@ class PyodideWorker {
 			importScripts('https://cdn.jsdelivr.net/pyodide/v0.23.2/full/pyodide.js');
 
 			this.pyodide = await loadPyodide();
-			
+
 			this.postMessage({ type: 'initialized', message: 'Pyodide initialized successfully' });
+			this.isReady = true;
 		} catch (error) {
 			this.postMessage({ type: 'error', message: `Failed to initialize Pyodide: ${error.message}` });
 		}
@@ -19,9 +21,16 @@ class PyodideWorker {
 
 	async runPython(code) {
 		try {
+			if (this.isReady === false) {
+				this.postMessage({ type: 'error', message: 'Pyodide is not initialized yet.' });
+				return;
+			}
+
+			this.isReady = false; // Prevent further calls until the current one is done
 			const result = await this.pyodide.runPythonAsync(code);
 			
 			this.postMessage({ type: 'result', result });
+			this.isReady = true; // Allow further calls after completion
 		} catch (error) {
 			this.postMessage({ type: 'error', message: `Error running Python code: ${error.message}` });
 		}

@@ -35,10 +35,10 @@
 </head>
 <body x-data="xData" style="background-color: #2c2c2c;">
     <div class="container text-center mt-5">
-		<button class="btn btn-dark position-absolute top-0 end-0 m-3 p-1" @click="toggleDelay">Toggle Delay</button>
+		<button class="btn btn-dark position-absolute top-0 end-0 m-3 p-1" @click="pythonCode = getPythonCode(codeIncludeDelay = !codeIncludeDelay);">Toggle Delay</button>
 
 		<h1 class="text-white">Python Pyodide Test</h1>
-		<pre class="bg-secondary p-3 rounded"><code class="language-python text-start" x-text="pythonCode"></code></pre>
+		<pre class="bg-secondary p-3 rounded"><code class="language-python text-start" x-text="pythonCode" x-init="$watch('pythonCode', () => { delete $el.dataset.highlighted; hljs.highlightElement($el); })"></code></pre>
 
 		<p class="text-white mb-2" x-text="pyodideStatusText"></p>
 		
@@ -83,7 +83,7 @@ returnString`
 			pyodideShowLoadingSpinner: true,
 			pyodideShowRunButton: false,
 			pyodideStatusText: "Loading Pyodide...",
-			pyodideIsRunning: false,
+			// pyodideIsRunning: false,
 			
 			returnString: "",
 
@@ -101,10 +101,10 @@ returnString`
 
 					if (type === "initialized") 
 					{
-						this.pyodideReady = true;
 						this.pyodideStatusText = message;
 						this.pyodideShowLoadingSpinner = false;
 						this.pyodideShowRunButton = true;
+						console.log("Pyodide initialized successfully.");
 					} 
 					else if (type === "result") 
 					{
@@ -112,7 +112,6 @@ returnString`
 						this.pyodideStatusText = "Python code executed successfully.";
 						this.pyodideShowLoadingSpinner = false;
 						this.pyodideShowRunButton = true;
-						this.pyodideIsRunning = false;
 					} 
 					else if (type === "error") 
 					{
@@ -129,6 +128,7 @@ returnString`
 
 				// Order the worker to initialize Pyodide
 				this.pyodideWorker.postMessage({ type: "initialize" });
+				// Response is 'initialized' in setupWorkerListner
 			},
 			
 			run() {
@@ -137,37 +137,13 @@ returnString`
 				this.pyodideStatusText = "Running Python code...";
 				this.pyodideShowLoadingSpinner = true;
 				this.pyodideShowRunButton = false;
-				this.pyodideIsRunning = true;
 				this.returnString = "";
 
 				// Tell the worker to run the Python code
 				console.log("Running Python code...");
 				this.pyodideWorker.postMessage({ type: "runPython", code: this.pythonCode });
+				// Response is 'result' in setupWorkerListner	
 			},
-
-			toggleDelay() {
-				
-				// Re-highlight the updated code block
-				codeElement = document.querySelector('code.language-python');
-				// delete codeElement.dataset.highlighted;
-				// hljs.highlightElement(codeElement);
-				
-				codeElement.removeAttribute('data-highlighted');
-				hljs.highlightAll();
-				
-				this.codeIncludeDelay = !this.codeIncludeDelay;
-				this.pythonCode = getPythonCode(this.codeIncludeDelay);
-
-
-				// document.querySelectorAll('code').forEach((block) => {
-				// if (block.hasAttribute('data-highlighted')) {
-				// 	block.removeAttribute('data-highlighted');
-				// }
-				// else{
-				// 	hljs.highlightBlock(block);
-				// }
-				// });
-			}
 		};
 	</script>
 </body>
