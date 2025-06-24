@@ -10,6 +10,37 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="Skärmbild 2022-03-31 223206.avif">
+    <style>
+        /* Anpassa textstorlek och marginaler för mobila enheter */
+        @media (max-width: 768px) {
+            .splash-image img {
+                height: 50vh !important; /* Minska höjden på splash-bilden */
+            }
+            .splash-image .position-absolute {
+                padding: 1rem !important; /* Minska padding för textinnehåll */
+            }
+            h1 {
+                font-size: 1.5rem !important; /* Minska rubrikstorlek */
+            }
+            p {
+                font-size: 0.9rem !important; /* Minska textstorlek */
+            }
+            .container-sm {
+                padding: 1rem !important; /* Minska padding för innehållsbehållaren */
+            }
+        }
+
+        /* Anpassa layouten för små skärmar */
+        @media (max-width: 768px) {
+            #content {
+                flex-direction: column !important; /* Stapla elementen vertikalt */
+                text-align: center; /* Centrera texten */
+            }
+            #content .pe-3 {
+                margin-bottom: 1rem !important; /* Lägg till marginal under textblocket */
+            }
+        }
+    </style>
 </head>
 <body style="background-color: #333">
     <!-- Splash Page Image -->
