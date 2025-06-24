@@ -5,6 +5,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Fredrik Ahlberg</title>
+		<script>window.document.title = "Fredrik Ahlberg"</script>
 		
 		<!-- Bootstrap CSS -->
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -70,7 +71,7 @@
 
 				<div class="article-list container p-4 rounded-4 shadow backdrop-blur" style="background: #2c2f33d9;">
 					<h2 class="fs-1 fw-bold">Hi there!</h2>
-					<h3 class="fs-5 fw-light mb-4">Here's a list of things I've made</h3>
+					<h3 class="fs-5 fw-light mb-4">This is my personal website that I'm working on</h3>
 					
 					<template x-for="article in articles" :key="article.title">
 						<a class="article-item mb-3 d-block text-decoration-none" :href="article.url">
@@ -89,7 +90,7 @@
 				articles: [],
 				async init() {
 					const response = await fetch('articles.json');
-					this.articles = [ { title: 'No articles found', url: '#' } ];
+					this.articles = [ { title: 'Things are work in progress atm', url: '#' } ];
 					
 					if (!response.ok) {
 						console.error('Failed to fetch article links:', response.statusText);
